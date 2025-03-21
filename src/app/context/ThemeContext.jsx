@@ -14,20 +14,20 @@ export function ThemeProvider({ children }) {
     
     if (storedTheme === 'dark' || (!storedTheme && prefersDark)) {
       setDarkMode(true);
-      document.documentElement.classList.add('dark');
+      document.body.classList.add('dark-mode');
     } else {
       setDarkMode(false);
-      document.documentElement.classList.remove('dark');
+      document.body.classList.remove('dark-mode');
     }
   }, []);
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
     if (!darkMode) {
-      document.documentElement.classList.add('dark');
+      document.body.classList.add('dark-mode');
       localStorage.setItem('theme', 'dark');
     } else {
-      document.documentElement.classList.remove('dark');
+      document.body.classList.remove('dark-mode');
       localStorage.setItem('theme', 'light');
     }
   };

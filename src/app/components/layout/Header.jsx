@@ -40,54 +40,92 @@ const Header = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 ${
         isScrolled
-          ? 'bg-white dark:bg-dark-800 shadow-md py-2'
-          : 'bg-transparent py-4'
+          ? 'header-scrolled'
+          : 'header-transparent'
       }`}
+      style={{
+        backgroundColor: isScrolled 
+          ? (darkMode ? 'var(--color-dark-800)' : '#ffffff') 
+          : 'transparent',
+        boxShadow: isScrolled ? '0 4px 6px -1px rgba(0, 0, 0, 0.1)' : 'none',
+        padding: isScrolled ? '0.5rem 0' : '1rem 0',
+        transition: 'all 0.3s ease'
+      }}
     >
-      <div className="container mx-auto flex justify-between items-center">
+      <div className="container flex justify-between items-center">
         <Link 
           href="#home" 
-          className="text-2xl font-bold text-primary-600 dark:text-primary-400"
+          className="logo"
+          style={{
+            fontSize: '1.5rem',
+            fontWeight: 'bold',
+            color: 'var(--color-primary-600)'
+          }}
         >
-          Gautam<span className="text-secondary-600 dark:text-secondary-400">.dev</span>
+          Gautam<span style={{ color: 'var(--color-secondary-600)' }}>.dev</span>
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-6">
+        <nav className="desktop-nav" style={{ display: 'none', alignItems: 'center', gap: '1.5rem' }}>
           {navItems.map((item) => (
             <Link
               key={item.label}
               href={item.href}
-              className="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+              className="nav-link"
+              style={{
+                color: darkMode ? 'var(--color-gray-300)' : 'var(--color-gray-700)',
+                transition: 'color 0.3s'
+              }}
+              onMouseOver={(e) => e.target.style.color = 'var(--color-primary-600)'}
+              onMouseOut={(e) => e.target.style.color = darkMode ? 'var(--color-gray-300)' : 'var(--color-gray-700)'}
             >
               {item.label}
             </Link>
           ))}
           <button
             onClick={toggleDarkMode}
-            className="p-2 rounded-full bg-gray-100 dark:bg-dark-700 text-gray-800 dark:text-gray-200"
+            className="theme-toggle"
             aria-label="Toggle dark mode"
+            style={{
+              padding: '0.5rem',
+              borderRadius: '9999px',
+              backgroundColor: darkMode ? 'var(--color-dark-700)' : 'var(--color-gray-100)',
+              color: darkMode ? 'var(--color-gray-200)' : 'var(--color-gray-800)'
+            }}
           >
             {darkMode ? <FiSun size={20} /> : <FiMoon size={20} />}
           </button>
         </nav>
 
         {/* Mobile Navigation Button */}
-        <div className="flex items-center md:hidden">
+        <div className="mobile-controls" style={{ display: 'flex', alignItems: 'center' }}>
           <button
             onClick={toggleDarkMode}
-            className="p-2 mr-2 rounded-full bg-gray-100 dark:bg-dark-700 text-gray-800 dark:text-gray-200"
+            className="theme-toggle-mobile"
             aria-label="Toggle dark mode"
+            style={{
+              padding: '0.5rem',
+              marginRight: '0.5rem',
+              borderRadius: '9999px',
+              backgroundColor: darkMode ? 'var(--color-dark-700)' : 'var(--color-gray-100)',
+              color: darkMode ? 'var(--color-gray-200)' : 'var(--color-gray-800)'
+            }}
           >
             {darkMode ? <FiSun size={20} /> : <FiMoon size={20} />}
           </button>
           
           <button
             onClick={toggleMobileMenu}
-            className="p-2 rounded-full bg-gray-100 dark:bg-dark-700 text-gray-800 dark:text-gray-200"
+            className="menu-toggle"
             aria-label="Toggle menu"
+            style={{
+              padding: '0.5rem',
+              borderRadius: '9999px',
+              backgroundColor: darkMode ? 'var(--color-dark-700)' : 'var(--color-gray-100)',
+              color: darkMode ? 'var(--color-gray-200)' : 'var(--color-gray-800)'
+            }}
           >
             {mobileMenuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
           </button>
@@ -101,15 +139,26 @@ const Header = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white dark:bg-dark-800 shadow-lg"
+            className="mobile-menu"
+            style={{
+              backgroundColor: darkMode ? 'var(--color-dark-800)' : '#ffffff',
+              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+            }}
           >
-            <nav className="container mx-auto py-4 flex flex-col space-y-4">
+            <nav className="container py-4 flex flex-col" style={{ gap: '1rem' }}>
               {navItems.map((item) => (
                 <Link
                   key={item.label}
                   href={item.href}
-                  className="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors px-4 py-2"
+                  className="mobile-nav-link"
+                  style={{
+                    color: darkMode ? 'var(--color-gray-300)' : 'var(--color-gray-700)',
+                    padding: '0.5rem 1rem',
+                    transition: 'color 0.3s'
+                  }}
                   onClick={() => setMobileMenuOpen(false)}
+                  onMouseOver={(e) => e.target.style.color = 'var(--color-primary-600)'}
+                  onMouseOut={(e) => e.target.style.color = darkMode ? 'var(--color-gray-300)' : 'var(--color-gray-700)'}
                 >
                   {item.label}
                 </Link>
@@ -118,6 +167,18 @@ const Header = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <style jsx>{`
+        @media (min-width: 768px) {
+          .desktop-nav {
+            display: flex;
+          }
+          
+          .mobile-controls {
+            display: none;
+          }
+        }
+      `}</style>
     </header>
   );
 };
